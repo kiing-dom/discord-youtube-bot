@@ -1,5 +1,6 @@
 import os
 import discord
+from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
@@ -19,11 +20,16 @@ if not YOUTUBE_API_KEY:
     raise ValueError("YOUTUBE_API_KEY not found in environment variables")
 
 # Set up intents
-intents = discord.Intents.default()
+intents = discord.Intents.default();
 intents.message_content = True
 
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        await self.tree.sync()
+        print("Slash commands synced with Discord.")
+
+bot = MyBot(command_prefix='!', intents=intents)
 
 youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
 
@@ -274,6 +280,10 @@ async def ytlatest(ctx, channel_id):
         )
 
     await ctx.send(embed=embed)
+    
+@bot.tree.command(name="ping")
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message("Pong!")
 
 # Start the Discord bot
 bot.run(DISCORD_TOKEN)
