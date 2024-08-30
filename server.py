@@ -24,8 +24,8 @@ def login():
     discord_login_url = f"{OAUTH2_AUTHORIZE_URL}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=coded&scope=identify"
     return redirect(discord_login_url)
 
-@app.route('callback')
-def outah_callback():
+@app.route('/callback')
+def oauth_callback():
     code = request.args.get('code')
     if code is None:
         return 'Authorization failed.', 400
