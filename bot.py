@@ -129,8 +129,31 @@ def get_video_details(video_id):
     except Exception:
         return None
 
-def get_latest_video(channel_id):
+def get_latest_video(channel_identifier):
     try:
+        # Check if the identifier is a new-style username (starts with @)
+        if channel_identifier.startswith('@'):
+            # Search for the channel
+            search_response = youtube.search().list(
+                part="snippet",
+                q=channel_identifier,
+                type="channel",
+                maxResults=1
+            ).execute()
+
+            if 'items' in search_response and len(search_response['items']) > 0:
+                channel_id = search_response['items'][0]['id']['channelId']
+            else:
+                return None
+        elif channel_identifier.startswith('UC'):
+            channel_id = channel_identifier
+        else:
+            # Assume it's an old-style username
+            channel_id = None
+
+        if not channel_id:
+            return None
+
         request = youtube.search().list(
             part="snippet",
             channelId=channel_id,
