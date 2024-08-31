@@ -187,9 +187,9 @@ def get_latest_video(channel_identifier):
 async def on_ready():
     print(f'Logged in as {bot.user}')
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send(f'Hello, {ctx.author.name}!')
+@bot.tree.command(description="Get a friendly greeting from Tubert")
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message(f'Hello, {interaction.user.display_name}!')
 
 @bot.command()
 async def ytstats(ctx, channel_identifier):
