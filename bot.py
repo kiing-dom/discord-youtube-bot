@@ -191,8 +191,9 @@ async def on_ready():
 async def hello(interaction: discord.Interaction):
     await interaction.response.send_message(f'Hello, {interaction.user.display_name}!')
 
-@bot.command()
-async def ytstats(ctx, channel_identifier):
+@bot.tree.command(name="ytstats", description="Get stats for YouTube channel using the channel id or username (@...)")
+async def ytstats(interaction: discord.Interaction, channel_identifier: str):
+    await interaction.response.defer()
     stats = get_channel_stats(channel_identifier)
     
     if stats:
@@ -212,7 +213,7 @@ async def ytstats(ctx, channel_identifier):
             color=discord.Color.red()
         )
 
-    await ctx.send(embed=embed)
+    await interaction.followup.send(embed=embed)
 
 @bot.command()
 async def ytsearch(ctx, *, query):
