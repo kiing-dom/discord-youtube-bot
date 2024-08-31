@@ -215,8 +215,9 @@ async def ytstats(interaction: discord.Interaction, channel_identifier: str):
 
     await interaction.followup.send(embed=embed)
 
-@bot.command()
-async def ytsearch(ctx, *, query):
+@bot.tree.command(name="ytsearch", description="Search for the top 5 videos related to your query!")
+async def ytsearch(interaction: discord.Interaction, query: str):
+    await interaction.response.defer()
     videos = search_youtube_videos(query)
 
     if videos:
@@ -235,7 +236,7 @@ async def ytsearch(ctx, *, query):
             color=discord.Color.red()
         )
 
-    await ctx.send(embed=embed)
+    await interaction.followup.send(embed=embed)
 
 @bot.command()
 async def ytvideo(ctx, video_id):
