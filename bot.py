@@ -238,8 +238,9 @@ async def ytsearch(interaction: discord.Interaction, query: str):
 
     await interaction.followup.send(embed=embed)
 
-@bot.command()
-async def ytvideo(ctx, video_id):
+@bot.tree.command(name="ytvideo", description="Gets information on a YouTube video given it's video id (the id after watch?v=)")
+async def ytvideo(interaction: discord.Interaction, video_id: str):
+    await interaction.response.defer()
     video = get_video_details(video_id)
 
     if video:
@@ -260,10 +261,11 @@ async def ytvideo(ctx, video_id):
             color=discord.Color.red()
         )
 
-    await ctx.send(embed=embed)
+    await interaction.followup.send(embed=embed)
 
-@bot.command()
-async def ytlatest(ctx, channel_id):
+@bot.tree.command(name="ytlatest", description="returns the latest video from a channel, given the channel id")
+async def ytlatest(interaction: discord.Interaction, channel_id: str):
+    await interaction.response.defer()
     video = get_latest_video(channel_id)
 
     if video:
@@ -281,7 +283,7 @@ async def ytlatest(ctx, channel_id):
             color=discord.Color.red()
         )
 
-    await ctx.send(embed=embed)
+    await interaction.followup.send(embed=embed)
     
 @bot.tree.command(name="ping")
 async def ping(interaction: discord.Interaction):
